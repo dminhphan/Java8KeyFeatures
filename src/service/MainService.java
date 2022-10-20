@@ -40,7 +40,7 @@ public class MainService {
   public static void main(String[] args) {
     try (XSSFWorkbook wb = new XSSFWorkbook(new FileInputStream("data.xlsx"))) {
       
-      // Sheet 0
+      // Import from Sheet 0
       XSSFSheet sheet = wb.getSheetAt(0); // creating a Sheet object to retrieve object
       Iterator<Row> itr = sheet.iterator(); // iterating over the rows in sheet 0
       itr.next(); // jump to row 1 in the sheet and start to scan from there 
@@ -52,7 +52,7 @@ public class MainService {
         productList.add(product);
       }
       
-      // Sheet 1
+      // Import from Sheet 1
       XSSFSheet sheet1 = wb.getSheetAt(1); // creating a Sheet object to retrieve object
       Iterator<Row> itr1 = sheet1.iterator(); // iterating over the rows in sheet 1
       itr1.next(); // jump to row 1 in the sheet and start to scan from there 
@@ -64,7 +64,7 @@ public class MainService {
         customerList.add(customer);
       }
       
-      // Sheet 2
+      // Import from Sheet 2
       XSSFSheet sheet2 = wb.getSheetAt(2); // creating a Sheet object to retrieve object
       Iterator<Row> itr2 = sheet2.iterator(); // iterating over the rows in sheet 2
       itr2.next(); // jump to row 1 in the sheet and start to scan from there
