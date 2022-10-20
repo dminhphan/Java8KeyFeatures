@@ -160,14 +160,14 @@ public class MainService {
           .collect(
               Collectors
               .toMap(
-                  Entry::getKey, entry -> entry.getValue() // turn the value[] into a stream
+                  Entry::getKey, entry -> entry.getValue() // turn the value[] of the Map into a stream
                   .stream()
-                  .map(productId -> productList.stream()
+                  .map(productId -> productList.stream() // for each productId of the value[] make a reference to productList[] 
                       .filter(
-                          product -> productId.equals(product.getID()))
+                          product -> productId.equals(product.getID())) // for each product in productList[], get the product that has the same productId as productId
                       .findAny()
                       .get()
-                      .toString())
+                      .toString()) // get toString() of those product of productId 
                   .collect(Collectors.toList())));
       purchasedProductNameCustomer.entrySet().stream().forEach(System.out::println);
       System.out.println();
@@ -178,16 +178,16 @@ public class MainService {
           .entrySet()
           .stream()
           .collect(
-              Collectors.toMap(Entry::getKey, entry->entry.getValue()
+              Collectors.toMap(Entry::getKey, entry->entry.getValue() // for each product in orderList[]
                   .stream()
                   .collect(
-                      Collectors.summingDouble(order-> productList
-                          .stream()
-                          .filter(product->product.getID()
-                              .equals(order.getProductId()))
+                      Collectors.summingDouble(order-> productList // summing all the double values of order by refer to productList[]
+                          .stream() // refer those products to product in productList[]
+                          .filter(product->product.getID() // for each product in productList[], get the Id 
+                              .equals(order.getProductId())) // if product.getID() == order.getProductId()
                           .findAny()
                           .get()
-                          .getPrice()))));
+                          .getPrice())))); // match the price of product in the orderList[]
       totalPrice.entrySet().stream().forEach(System.out::println);
       System.out.println();
       
@@ -196,14 +196,14 @@ public class MainService {
           .entrySet()
           .stream()
           .collect(
-              Collectors
-              .toMap(Entry::getKey, entry -> entry.getValue()
+              Collectors 
+              .toMap(Entry::getKey, entry -> entry.getValue() // keep the key
                   .stream()
                   .collect(
                       Collectors
-                      .summingLong(
-                          order -> ChronoUnit.DAYS.between(
-                              order.getOrderDate(), order.getDeliveryDate())))));
+                      .summingLong( // sum all the long type
+                          order -> ChronoUnit.DAYS.between( // for every order obj in the value of the Map
+                              order.getOrderDate(), order.getDeliveryDate()))))); // get 2 dates of one order
       deliveryDay.entrySet().stream().forEach(System.out::println);
       System.out.println();
       
@@ -213,27 +213,29 @@ public class MainService {
         report.setPurchasedProducts(entry.getValue());
         reportList.add(report);
       });      
-      reportList.stream().forEach(report -> {
-        report.setTotalPrice(totalPrice.get(report.getCustomerId()));
-        report.setDeliveryDays(deliveryDay.get(report.getCustomerId()));
+      reportList.stream().forEach(report -> { // for each report obj reportList[]
+        report.setTotalPrice(totalPrice.get(report.getCustomerId())); // totalPrice is a Map, Map.get(key) return the value of that key 
+        report.setDeliveryDays(deliveryDay.get(report.getCustomerId())); // report.getCustomerId() return the customerId
         report.setCustomerName(customerNameMap.get(report.getCustomerId()));
         report.setDOB(customerDOBMap.get(report.getCustomerId()));
       });
       // sorted purchasedProductNameCustomer[] with descending order of TotalPrice
       List<Report> reportListSorted = reportList
           .stream()
-          .sorted((a, b) -> -Double
-              .compare(a.getTotalPrice(), b.getTotalPrice()))
+          .sorted((a, b) -> -Double // a and b are 2 consecutive report obj in reportList[]
+              .compare(a.getTotalPrice(), b.getTotalPrice())) // compare the double type between 2 totalPrice of a and b
           .collect(Collectors.toList());
       
       reportListSorted.stream().forEach(System.out::println);
       System.out.println();
 
+      // turn the Map into a List (wrong order), cus01=[p02, p03, p05] as an Entry element, no Key and Value available
       List<Entry<String, List<String>>> newList = new LinkedList<>(purchasedProductIdCustomer.entrySet());
       newList.stream().forEach(System.out::println);
       System.out.println(newList.size());
-      
-      List<List<String>> values = purchasedProductIdCustomer.values() // from a Map, get values only
+      // get values from a Map, turn those into a list (wrong order)
+      // [[p01], [p02, p03, p05], [p02, p01, p09, p18, p20], [p10, p19], [p15], [p06, p07, p08, p18]]
+      List<List<String>> values = purchasedProductIdCustomer.values() 
           .stream().collect(Collectors.toList()); 
       System.out.println(values);
 
