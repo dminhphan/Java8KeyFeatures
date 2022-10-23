@@ -1,6 +1,7 @@
 package stream.api;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -49,27 +50,92 @@ public class StreamEx {
         anotherProducts.add(new Product("p7", "Product 7", 8000));
         anotherProducts.add(new Product("p8", "Product 8", 10000));
         // Filter
-        List<Product> filterProducts = products.stream().filter(p -> p.price >= 3000).collect(Collectors.toList());
+        List<Product> filterProducts = products
+        		.stream()
+        		.filter(p -> p.price >= 3000)
+        		.collect(Collectors.toList());
         System.out.println(filterProducts.size());
+        System.out.println();
+        List<Product> filteredProducts = products
+        		.stream()
+        		.filter(
+        				product -> product.price >= 2000)
+        		.collect(
+        				Collectors.toList());
+        filteredProducts.stream().forEach(System.out::println);
+        System.out.println();
+        // Name of products has > 2000 in price
+        List<String> filderedProductsName = products
+        		.stream()
+        		.filter(p -> p.price > 2000)
+        		.map(p -> p.name)
+        		.collect(Collectors.toList());
+        filderedProductsName.stream().forEachOrdered(System.out::println);
+        System.out.println();
         // Map
-        List<String> productNames = products.stream().map(p -> p.name).collect(Collectors.toList());
+        List<String> productNames = products
+        		.stream()
+        		.map(p -> p.name)
+        		.collect(
+        				Collectors.toList()
+        				);
         productNames.forEach(System.out::println);
+        System.out.println();
+        List<String> stringList = new ArrayList<>(Arrays.asList("a", "b", "c"));
+        stringList.stream().forEach(System.out::println);
+        System.out.println();
         // FlatMap
         List<Store> stores = new ArrayList<>();
         stores.add(new Store("st1", "Store 1", products));
         stores.add(new Store("st2", "Store 2", anotherProducts));
 //         stores.stream().map(x -> x.products).collect(Collectors.toList()).forEach(System.out::println);
-        List<Product> allProducts = stores.stream().flatMap(x -> x.products.stream()).collect(Collectors.toList());
+        List<Product> allProducts = stores
+        		.stream()
+        		.flatMap(
+        				x -> x.products.stream())
+        		.collect(Collectors.toList());
         allProducts.forEach(System.out::println);
+        System.out.println();
+        
+        List<List<Product>> allStoreProduct = stores.stream()
+        		.map(x -> x.products).collect(Collectors.toList());
+        allStoreProduct.stream().forEach(System.out::println);
+        
+        // get the price of all store products
+        List<Product> allStoreProducts = stores.stream()
+        		.flatMapToLong(
+        				x -> x.products.stream().filter(p -> p.price))
+        		.collect(Collectors.toList());
         // Reduce
-        long totalPrice = products.stream().map(p -> p.price).reduce(0l, (x1, x2) -> x1 + x2);
+        long totalPrice = products
+        		.stream()
+        		.map(p -> p.price)
+        		.reduce(0l, (x1, x2) -> x1 + x2);
         System.out.println("Total price: " + totalPrice);
-        Optional<Long> maxPrice = products.stream().map(p -> p.price).reduce((x1, x2) -> x1 > x2 ? x1 : x2);
+        System.out.println();
+        Optional<Long> maxPrice = products
+        		.stream()
+        		.map(p -> p.price)
+        		.reduce(
+        				(x1, x2) -> x1 > x2 ? x1 : x2);
         maxPrice.ifPresent(System.out::println);
-        Optional<Long> minPrice = products.stream().map(p -> p.price).reduce((x1, x2) -> x1 < x2 ? x1 : x2);
+        System.out.println();
+        Optional<Long> minPrice = products
+        		.stream()
+        		.map(p -> p.price)
+        		.reduce(
+        				(x1, x2) -> x1 < x2 ? x1 : x2);
         minPrice.ifPresent(System.out::println);
-        long count = products.stream().map(p -> p.price).reduce(0l, (i, p) -> i + 1);
+        System.out.println();
+        long count = products
+        		.stream()
+        		.map(p -> p.price)
+        		.reduce(0l, (i, p) -> i + 1);
         System.out.println(count);
+        System.out.println();
+        int countStore = stores.stream()
+        		.map(store -> store.id)
+        		.reduce(0l, (i, store) -> i + 1);
     }
 
 }
