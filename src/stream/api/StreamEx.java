@@ -81,9 +81,15 @@ public class StreamEx {
         				);
         productNames.forEach(System.out::println);
         System.out.println();
+        
         List<String> stringList = new ArrayList<>(Arrays.asList("a", "b", "c"));
         stringList.stream().forEach(System.out::println);
         System.out.println();
+        
+        List<Integer> stringInt = Arrays.asList(1, 2, 4);
+        stringInt.stream().forEach(System.out::println);
+        System.out.println();
+        
         // FlatMap
         List<Store> stores = new ArrayList<>();
         stores.add(new Store("st1", "Store 1", products));
@@ -98,14 +104,27 @@ public class StreamEx {
         System.out.println();
         
         List<List<Product>> allStoreProduct = stores.stream()
-        		.map(x -> x.products).collect(Collectors.toList());
+        		.map(x -> x.products)
+        		.collect(Collectors.toList());
         allStoreProduct.stream().forEach(System.out::println);
+        System.out.println();
+        
+        List<Product> allProductinStore = stores.stream()
+            .flatMap(store -> store.products.stream())
+            .collect(Collectors.toList());
+        allProductinStore.stream().forEach(System.out::println);
+        System.out.println();
         
         // get the price of all store products
-        List<Product> allStoreProducts = stores.stream()
-        		.flatMapToLong(
-        				x -> x.products.stream().filter(p -> p.price))
+        List<Long> storeProductPrice = stores.stream()
+        		.flatMap(
+        				store -> store.products
+        				.stream()
+        				.map(product -> product.price))
         		.collect(Collectors.toList());
+        storeProductPrice.stream().forEach(System.out::println);
+        System.out.println();
+        
         // Reduce
         long totalPrice = products
         		.stream()
@@ -120,6 +139,7 @@ public class StreamEx {
         				(x1, x2) -> x1 > x2 ? x1 : x2);
         maxPrice.ifPresent(System.out::println);
         System.out.println();
+        
         Optional<Long> minPrice = products
         		.stream()
         		.map(p -> p.price)
@@ -127,15 +147,20 @@ public class StreamEx {
         				(x1, x2) -> x1 < x2 ? x1 : x2);
         minPrice.ifPresent(System.out::println);
         System.out.println();
+        
         long count = products
         		.stream()
         		.map(p -> p.price)
         		.reduce(0l, (i, p) -> i + 1);
         System.out.println(count);
         System.out.println();
-        int countStore = stores.stream()
-        		.map(store -> store.id)
-        		.reduce(0l, (i, store) -> i + 1);
+        
+        long countProduct = products.stream().count();
+        System.out.println(countProduct);
+        System.out.println();
+        
+        long countStore = stores.stream().count();
+        System.out.println(countStore);
     }
 
 }
